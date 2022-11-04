@@ -23,7 +23,7 @@ set cursorline
 set cursorcolumn
 
 " Set shift width to 4 spaces.
-set shiftwidth=4
+set shiftwidth=2
 
 " Set tab width to 4 columns.
 set tabstop=2
@@ -79,22 +79,19 @@ set termguicolors
 
 
 " PLUGINS ---------------------------------------------------------------- {{{
-call plug#begin('~/.vim/plugged')
+call plug#begin('~/.config/nvim/plugged')
 "Theme
 "Plug 'Luxed/ayu-vim'
 Plug 'folke/tokyonight.nvim', {'branch': 'main'}
 Plug 'morhetz/gruvbox'
 
-"Coc
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-
-"Dart&Flutter
+"Dart/Flutter
 Plug 'dart-lang/dart-vim-plugin'
+Plug 'thosakwe/vim-flutter'
 Plug 'natebosch/vim-lsc'
 Plug 'natebosch/vim-lsc-dart'
-"Plug 'thosakwe/vim-flutter'
 
-Plug 'dense-analysis/ale'
+
 Plug 'preservim/nerdtree'
 
 " FZF
@@ -115,13 +112,13 @@ call plug#end()
 
 
 " VIMSCRIPT -------------------------------------------------------------- {{{
-
-" This will enable code folding.
-" Use the marker method of folding.
 augroup filetype_vim
     autocmd!
     autocmd FileType vim setlocal foldmethod=marker
 augroup END
+
+" This will enable code folding.
+" Use the marker method of folding.
 
 " More Vimscripts code goes here.
 
@@ -133,6 +130,7 @@ augroup END
 " Status bar code goes here.
 
 " }}}
+"
 
 
 "colorscheme ayu
@@ -146,12 +144,26 @@ augroup END
 "colorscheme tokyonight-moon
 colorscheme gruvbox
 
+let g:lsc_server_commands = {'dart': 'dart snapshots/analysis_server.dart.snapshot --lsp'}
+let g:lsc_auto_map = v:true
 let g:dart_format_on_save = 1
 let g:dartfmt_options = ['--fix', '--line-length 120']
-let g:ayucolor="migrate"
-let g:coc_global_extensions = [
-            \ 'coc-flutter',
-            \ ]
+let g:dart_trailing_comma_indent = v:true
+let g:lsc_auto_map = {
+    \ 'GoToDefinition': 'gd',
+    \ 'FindReferences': 'gr',
+    \ 'NextReference': '<C-n>',
+    \ 'PreviousReference': '<C-p>',
+    \ 'FindImplementations': 'gi',
+    \ 'FindCodeActions': 'ga',
+    \ 'Rename': 'rn',
+    \ 'ShowHover': v:true,
+    \ 'DocumentSymbol': 'go',
+    \ 'WorkspaceSymbol': 'gS',
+    \ 'SignatureHelp': 'gm',
+    \ 'Completion': 'completefunc',
+    \}
+let g:lsc_enable_autocomplete = v:true
 
 inoremap jj <esc>
 
@@ -160,32 +172,15 @@ map <leader>j :wincmd j <CR>
 map <leader>k :wincmd k <CR>
 map <leader>l :wincmd l <CR>
 
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
 
-" Symbol renaming
-nmap <leader>rn <Plug>(coc-rename)
 
 nnoremap <leader>n :NERDTreeFocus<CR>
 nnoremap <C-n> :NERDTree<CR>
 nnoremap <C-t> :NERDTreeToggle<CR>
 nnoremap <C-f> :NERDTreeFind<CR>
 
-"Code action
-xmap <leader>a  <Plug>(coc-codeaction-selected)
-nmap <leader>a  <Plug>(coc-codeaction-selected)
 
-nnoremap <leader>fa :CocCommand flutter.run <CR>
-nnoremap <leader>fds :CocCommand flutter.devices <CR>
-nnoremap <leader>fq :CocCommand flutter.dev.quit <CR>
-nnoremap <leader>fg :CocCommand flutter.pub.get <CR>
-nnoremap <leader>fr :CocCommand flutter.dev.hotReload <CR>
-nnoremap <leader>fR :CocCommand flutter.dev.hotRestart <CR>
-nnoremap <leader>fo :CocCommand flutter.dev.openDevLog <CR>
 
 
 nmap <C-P> :FZF<CR>
 
-autocmd VimENter *NERDTree | wincmd p
